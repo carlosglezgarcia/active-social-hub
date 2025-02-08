@@ -43,15 +43,20 @@ const Chat: FC = () => {
       
       {/* Main chat area */}
       <div className="flex-1 flex flex-col">
-        {/* Voice chat controls */}
-        <div className="bg-card border-b p-2 flex items-center justify-center space-x-2">
+        {/* Voice chat controls - Ahora más visible */}
+        <div className="bg-card border-b p-4 flex items-center justify-center">
           <Button
-            variant={isMuted ? "ghost" : "default"}
-            size="icon"
+            variant={isMuted ? "outline" : "default"}
+            size="lg"
             onClick={toggleMute}
-            className="w-10 h-10 rounded-full"
+            className="w-16 h-16 rounded-full shadow-lg hover:scale-105 transition-transform"
+            aria-label={isMuted ? "Activar micrófono" : "Desactivar micrófono"}
           >
-            {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            {isMuted ? (
+              <MicOff className="h-8 w-8 text-destructive" />
+            ) : (
+              <Mic className="h-8 w-8 text-green-500" />
+            )}
           </Button>
         </div>
 
