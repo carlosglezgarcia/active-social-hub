@@ -54,8 +54,8 @@ const Exercise: FC = () => {
     // Limpiar el canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Dibujar un esqueleto básico simulado
-    ctx.strokeStyle = '#4CAF50';
+    // Configuración del estilo
+    ctx.strokeStyle = '#8E9196';
     ctx.lineWidth = 4;
 
     // Cabeza
@@ -63,43 +63,68 @@ const Exercise: FC = () => {
     ctx.arc(canvas.width / 2, 150, 30, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Cuerpo
+    // Cuello
     ctx.beginPath();
     ctx.moveTo(canvas.width / 2, 180);
+    ctx.lineTo(canvas.width / 2, 200);
+    ctx.stroke();
+
+    // Cuerpo
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 200);
     ctx.lineTo(canvas.width / 2, 350);
     ctx.stroke();
 
-    // Brazos
+    // Brazos (con codos)
+    // Brazo izquierdo
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, 220);
-    ctx.lineTo(canvas.width / 2 - 80, 280);
-    ctx.moveTo(canvas.width / 2, 220);
-    ctx.lineTo(canvas.width / 2 + 80, 280);
+    ctx.moveTo(canvas.width / 2, 220); // Hombro
+    ctx.lineTo(canvas.width / 2 - 40, 250); // Codo
+    ctx.lineTo(canvas.width / 2 - 80, 280); // Mano
     ctx.stroke();
 
-    // Piernas
+    // Brazo derecho
     ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, 350);
-    ctx.lineTo(canvas.width / 2 - 60, 450);
-    ctx.moveTo(canvas.width / 2, 350);
-    ctx.lineTo(canvas.width / 2 + 60, 450);
+    ctx.moveTo(canvas.width / 2, 220); // Hombro
+    ctx.lineTo(canvas.width / 2 + 40, 250); // Codo
+    ctx.lineTo(canvas.width / 2 + 80, 280); // Mano
+    ctx.stroke();
+
+    // Piernas (con rodillas)
+    // Pierna izquierda
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 350); // Cadera
+    ctx.lineTo(canvas.width / 2 - 30, 400); // Rodilla
+    ctx.lineTo(canvas.width / 2 - 60, 450); // Pie
+    ctx.stroke();
+
+    // Pierna derecha
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 350); // Cadera
+    ctx.lineTo(canvas.width / 2 + 30, 400); // Rodilla
+    ctx.lineTo(canvas.width / 2 + 60, 450); // Pie
     ctx.stroke();
 
     // Puntos de las articulaciones
     const joints = [
       [canvas.width / 2, 150], // Cabeza
       [canvas.width / 2, 220], // Hombros
-      [canvas.width / 2 - 80, 280], // Mano izquierda
-      [canvas.width / 2 + 80, 280], // Mano derecha
+      [canvas.width / 2 - 40, 250], // Codo izquierdo
+      [canvas.width / 2 + 40, 250], // Codo derecho
+      [canvas.width / 2 - 80, 280], // Muñeca izquierda
+      [canvas.width / 2 + 80, 280], // Muñeca derecha
       [canvas.width / 2, 350], // Cadera
-      [canvas.width / 2 - 60, 450], // Pie izquierdo
-      [canvas.width / 2 + 60, 450], // Pie derecho
+      [canvas.width / 2 - 30, 400], // Rodilla izquierda
+      [canvas.width / 2 + 30, 400], // Rodilla derecha
+      [canvas.width / 2 - 60, 450], // Tobillo izquierdo
+      [canvas.width / 2 + 60, 450], // Tobillo derecho
     ];
 
+    // Dibujar los puntos de las articulaciones
     joints.forEach(([x, y]) => {
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = '#4CAF50';
+      ctx.fillStyle = '#8B5CF6';
       ctx.fill();
     });
 
