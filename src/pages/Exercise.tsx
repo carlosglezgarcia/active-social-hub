@@ -1,5 +1,5 @@
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft, ArrowUp, ArrowDown, RotateCw } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -11,6 +11,7 @@ type Instruction = {
 };
 
 const Exercise: FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentInstruction, setCurrentInstruction] = useState<Instruction | null>(null);
   const [score, setScore] = useState(0);
   const { toast } = useToast();
@@ -42,6 +43,67 @@ const Exercise: FC = () => {
       action: "giro"
     }
   ];
+
+  useEffect(() => {
+    if (!canvasRef.current || !currentInstruction) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Limpiar el canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar un esqueleto básico simulado
+    ctx.strokeStyle = '#4CAF50';
+    ctx.lineWidth = 4;
+
+    // Cabeza
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, 150, 30, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Cuerpo
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 180);
+    ctx.lineTo(canvas.width / 2, 350);
+    ctx.stroke();
+
+    // Brazos
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 220);
+    ctx.lineTo(canvas.width / 2 - 80, 280);
+    ctx.moveTo(canvas.width / 2, 220);
+    ctx.lineTo(canvas.width / 2 + 80, 280);
+    ctx.stroke();
+
+    // Piernas
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 350);
+    ctx.lineTo(canvas.width / 2 - 60, 450);
+    ctx.moveTo(canvas.width / 2, 350);
+    ctx.lineTo(canvas.width / 2 + 60, 450);
+    ctx.stroke();
+
+    // Puntos de las articulaciones
+    const joints = [
+      [canvas.width / 2, 150], // Cabeza
+      [canvas.width / 2, 220], // Hombros
+      [canvas.width / 2 - 80, 280], // Mano izquierda
+      [canvas.width / 2 + 80, 280], // Mano derecha
+      [canvas.width / 2, 350], // Cadera
+      [canvas.width / 2 - 60, 450], // Pie izquierdo
+      [canvas.width / 2 + 60, 450], // Pie derecho
+    ];
+
+    joints.forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#4CAF50';
+      ctx.fill();
+    });
+
+  }, [currentInstruction]);
 
   const getRandomInstruction = () => {
     const randomIndex = Math.floor(Math.random() * instructions.length);
@@ -75,57 +137,71 @@ const Exercise: FC = () => {
 
   return (
     <div className="min-h-screen bg-background p-8">
-      {/* Cabecera */}
-      <div className="max-w-4xl mx-auto text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Simón dice...</h1>
-        <p className="text-2xl text-muted-foreground mb-8">
-          Puntuación actual: {score}
-        </p>
-      </div>
+      <div className="max-w-[1600px] mx-auto">
+        {/* Cabecera */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4">Simón dice...</h1>
+          <p className="text-2xl text-muted-foreground">
+            Puntuación actual: {score}
+          </p>
+        </div>
 
-      {/* Área principal del ejercicio */}
-      <div className="max-w-4xl mx-auto">
-        {currentInstruction ? (
-          <div className="space-y-8 text-center">
-            {/* Instrucción visual */}
-            <div className="bg-card p-8 rounded-2xl shadow-lg">
-              <div className="flex justify-center mb-4">
-                {currentInstruction.icon}
+        {/* Contenedor principal con grid */}
+        <div className="grid grid-cols-4 gap-8">
+          {/* Canvas - 3/4 del espacio */}
+          <div className="col-span-3 bg-card rounded-2xl shadow-lg overflow-hidden">
+            <canvas
+              ref={canvasRef}
+              width={1200}
+              height={600}
+              className="w-full h-full bg-black/5"
+            />
+          </div>
+
+          {/* Panel de instrucciones - 1/4 del espacio */}
+          <div className="col-span-1">
+            {currentInstruction ? (
+              <div className="space-y-8">
+                <div className="bg-card p-6 rounded-2xl shadow-lg">
+                  <div className="flex justify-center mb-4">
+                    {currentInstruction.icon}
+                  </div>
+                  <h2 className="text-2xl font-semibold mb-4">
+                    {currentInstruction.text}
+                  </h2>
+                  <Button 
+                    size="lg"
+                    className="w-full text-xl px-8 py-6 h-auto"
+                    onClick={handleAction}
+                  >
+                    ¡Completado!
+                  </Button>
+                </div>
               </div>
-              <h2 className="text-3xl font-semibold mb-4">
-                {currentInstruction.text}
-              </h2>
-              <Button 
-                size="lg"
-                className="text-xl px-8 py-6 h-auto"
-                onClick={handleAction}
-              >
-                ¡Completado!
-              </Button>
+            ) : (
+              <div className="text-center">
+                <Button
+                  size="lg"
+                  className="w-full text-xl px-8 py-6 h-auto animate-pulse"
+                  onClick={startExercise}
+                >
+                  Comenzar ejercicio
+                </Button>
+              </div>
+            )}
+
+            {/* Instrucciones generales */}
+            <div className="mt-8 p-6 bg-muted rounded-lg">
+              <h3 className="text-xl font-semibold mb-4">¿Cómo jugar?</h3>
+              <ul className="space-y-4 text-base">
+                <li>1. Pulsa "Comenzar ejercicio" para empezar</li>
+                <li>2. Sigue las instrucciones que aparecen en pantalla</li>
+                <li>3. Cuando hayas completado el movimiento, pulsa "¡Completado!"</li>
+                <li>4. ¡Intenta conseguir la mayor puntuación posible!</li>
+              </ul>
             </div>
           </div>
-        ) : (
-          <div className="text-center">
-            <Button
-              size="lg"
-              className="text-xl px-8 py-6 h-auto animate-pulse"
-              onClick={startExercise}
-            >
-              Comenzar ejercicio
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Instrucciones generales */}
-      <div className="max-w-2xl mx-auto mt-12 p-6 bg-muted rounded-lg">
-        <h3 className="text-2xl font-semibold mb-4">¿Cómo jugar?</h3>
-        <ul className="space-y-4 text-lg">
-          <li>1. Pulsa "Comenzar ejercicio" para empezar</li>
-          <li>2. Sigue las instrucciones que aparecen en pantalla</li>
-          <li>3. Cuando hayas completado el movimiento, pulsa "¡Completado!"</li>
-          <li>4. ¡Intenta conseguir la mayor puntuación posible!</li>
-        </ul>
+        </div>
       </div>
     </div>
   );
