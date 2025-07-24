@@ -1,7 +1,12 @@
-
 import { FC, useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, ArrowUp, ArrowDown, RotateCw } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  ArrowUp,
+  ArrowDown,
+  RotateCw,
+} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 type Instruction = {
@@ -12,50 +17,51 @@ type Instruction = {
 
 const Exercise: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [currentInstruction, setCurrentInstruction] = useState<Instruction | null>(null);
+  const [currentInstruction, setCurrentInstruction] =
+    useState<Instruction | null>(null);
   const [score, setScore] = useState(0);
   const { toast } = useToast();
 
   const instructions: Instruction[] = [
-    { 
-      text: "Muévete a la derecha", 
+    {
+      text: "Muévete a la derecha",
       icon: <ArrowRight className="h-24 w-24" />,
-      action: "derecha"
+      action: "derecha",
     },
-    { 
-      text: "Muévete a la izquierda", 
+    {
+      text: "Muévete a la izquierda",
       icon: <ArrowLeft className="h-24 w-24" />,
-      action: "izquierda"
+      action: "izquierda",
     },
-    { 
-      text: "Tócate el hombro izquierdo", 
+    {
+      text: "Tócate el hombro izquierdo",
       icon: <ArrowLeft className="h-24 w-24" />,
-      action: "hombro-izquierdo"
+      action: "hombro-izquierdo",
     },
-    { 
-      text: "Tócate el hombro derecho", 
+    {
+      text: "Tócate el hombro derecho",
       icon: <ArrowRight className="h-24 w-24" />,
-      action: "hombro-derecho"
+      action: "hombro-derecho",
     },
-    { 
-      text: "Da un giro", 
+    {
+      text: "Da un giro",
       icon: <RotateCw className="h-24 w-24" />,
-      action: "giro"
-    }
+      action: "giro",
+    },
   ];
 
   useEffect(() => {
     if (!canvasRef.current || !currentInstruction) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // Limpiar el canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Configuración del estilo
-    ctx.strokeStyle = '#8E9196';
+    ctx.strokeStyle = "#8E9196";
     ctx.lineWidth = 4;
 
     // Cabeza
@@ -124,10 +130,9 @@ const Exercise: FC = () => {
     joints.forEach(([x, y]) => {
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = '#8B5CF6';
+      ctx.fillStyle = "#8B5CF6";
       ctx.fill();
     });
-
   }, [currentInstruction]);
 
   const getRandomInstruction = () => {
@@ -151,7 +156,7 @@ const Exercise: FC = () => {
 
   const handleAction = () => {
     if (currentInstruction) {
-      setScore(prev => prev + 1);
+      setScore((prev) => prev + 1);
       toast({
         title: "¡Muy bien!",
         description: "Has completado el movimiento correctamente",
@@ -194,7 +199,7 @@ const Exercise: FC = () => {
                   <h2 className="text-2xl font-semibold mb-4">
                     {currentInstruction.text}
                   </h2>
-                  <Button 
+                  <Button
                     size="lg"
                     className="w-full text-xl px-8 py-6 h-auto"
                     onClick={handleAction}
@@ -221,7 +226,9 @@ const Exercise: FC = () => {
               <ul className="space-y-4 text-base">
                 <li>1. Pulsa "Comenzar ejercicio" para empezar</li>
                 <li>2. Sigue las instrucciones que aparecen en pantalla</li>
-                <li>3. Cuando hayas completado el movimiento, pulsa "¡Completado!"</li>
+                <li>
+                  3. Cuando hayas completado el movimiento, pulsa "¡Completado!"
+                </li>
                 <li>4. ¡Intenta conseguir la mayor puntuación posible!</li>
               </ul>
             </div>

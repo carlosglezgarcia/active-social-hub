@@ -1,4 +1,3 @@
-
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
@@ -13,15 +12,17 @@ const Index: FC = () => {
     {
       icon: Activity,
       title: "ActivePlay",
-      description: "Ejercicios personalizados, rutinas de entrenamiento y seguimiento en tiempo real",
+      description:
+        "Ejercicios personalizados, rutinas de entrenamiento y seguimiento en tiempo real",
       buttonText: "Comienza el ejercicio",
       accentColor: "hover:bg-primary/5",
-      onClick: () => console.log("Clicked: ActivePlay"),
+      onClick: () => navigate("/Exercise"),
     },
     {
       icon: Coffee,
       title: "Café Virtual",
-      description: "Conecta con amigos en el chat",
+      description:
+        "Conecta con amigos en el chat, disfruta de una pausa y comparte experiencias",
       buttonText: "Únete al Café",
       accentColor: "hover:bg-orange-500/5",
       onClick: () => navigate("/chat"),
@@ -29,7 +30,8 @@ const Index: FC = () => {
     {
       icon: Brain,
       title: "Hora de jugar",
-      description: "Escape room, juegos interactivos, juega y piensa con nosotros",
+      description:
+        "Escape room, juegos interactivos, juega y piensa con nosotros",
       buttonText: "Comienza tu aventura",
       accentColor: "hover:bg-purple-500/5",
       onClick: () => console.log("Clicked: Hora de jugar"),
